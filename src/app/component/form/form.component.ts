@@ -42,15 +42,28 @@ export class FormComponent implements OnInit {
   constructor( fb: FormBuilder,private datePipe: DatePipe,private route: Router, private dataService: DataService){
     
     // add necessary validators
-
     this.complexForm = fb.group({
-      'firstName' : [''],
-      'lastName': [''],
-      'gender' : [null],
-      'dob' : [null],
-      'mobile' : [''],
-      'email' : [''],
-      'description' : ''
+      'firstName': ['', [
+        Validators.required,
+        Validators.minLength(3),
+        Validators.maxLength(20)
+      ]],
+      'lastName': ['', [
+        Validators.required,
+        Validators.minLength(3),
+        Validators.maxLength(20)
+      ]],
+      'gender': [null,
+        Validators.required,
+      ],
+      'dob': [null, Validators.required],
+      'mobile': ['', [
+        Validators.required,
+        Validators.pattern(/^(?!123456$)(?!1234567a9$)[0-9]{10,}$/),
+        Validators.maxLength(10)
+      ]],
+      'email': ['', Validators.email],
+      'description': ''
     })
   }
 
@@ -59,6 +72,18 @@ export class FormComponent implements OnInit {
     // assign new date object to reportedTime
     // should reister new patient using service
     // if added successfully should redirect to 'patientList' page
+    this.dataService.registerPatient(this.complexForm.value).subscribe(
+			(response) => {
+				// Successful login
+				if (!response) {
+					return;
+				}
+				this.route.navigate(['/patientList']);
+			},
+			(error) => {
+				// Handle login error (display error message, etc.)
+			}
+		);
 
   }
 

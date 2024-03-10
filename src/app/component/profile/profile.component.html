@@ -10,7 +10,7 @@
     <div class="home-profile-wrapper border">
 
       <!-- hide profile details if editing the form-->
-      <ul id="profileDetails" class="profile-details">
+      <ul id="profileDetails" class="profile-details" *ngIf="editProfile === false">
         <li class="list-items" >
           <fa class="home-icons" name="user" size="2x"></fa>
           <span id="usernameVal"  >
@@ -39,21 +39,20 @@
       </ul>
 
       <!-- show edit profile form if edit profile button clicked-->
-      <form id="editProfileForm" class="ro-form profile-form">
+      <form id="editProfileForm" class="ro-form profile-form" *ngIf="editProfile === true" [formGroup]="editProfileForm" (ngSubmit)="changeMyProfile()">
         <h2>Edit your profile</h2>
         <div class="form-group">
           <label for="username">
             Name
           </label>
-          <input type="text" id="consumerName" value="" placeholder="Name">
-
+          <input type="text" id="consumerName" value="" placeholder="Name" formControlName="userName">
         </div>
         <div class="form-group">
           <label for="mobile">
             Contact number
           </label>
-          <input type="text" value="" id="mobile" placeholder="mobile number">
-          <div class="form-error-messages">
+          <input type="text" value="" id="mobile" placeholder="mobile number" formControlName="mobile">
+          <div class="form-error-messages" *ngIf="editProfileForm.get('mobile').invalid">
             {{mobileErrMsg}}
           </div>
         </div>
@@ -61,8 +60,8 @@
           <label for="email">
             Email
           </label>
-          <input type="email" value="" id="email" placeholder="Email">
-          <div class="form-error-messages">
+          <input type="email" value="" id="email" placeholder="Email" formControlName="email">
+          <div class="form-error-messages" *ngIf="editProfileForm.get('email').invalid">
             {{emailErrMsg}}
           </div>
         </div>
@@ -71,8 +70,8 @@
           <label for="location">
             Location
           </label>
-          <input type="text" value="" id="location" placeholder="Location">
-          <div class="form-error-messages">
+          <input type="text" value="" id="location" placeholder="Location" formControlName="location">
+          <div class="form-error-messages" *ngIf="editProfileForm.get('location').invalid">
             {{locationErrMsg}}
           </div>
         </div>
@@ -82,15 +81,15 @@
         <button class="btn" type="submit" id="editSubmitBtn">Make changes</button>
       </form>
       <div class="profile-edit-choice">
-
+        
         <!-- show button if not editing the form-->
         <!-- call editMyProfile method when clicking on this button-->
-        <button id="editProfileBtn" class="prompt-btn btn">
+        <button id="editProfileBtn" class="prompt-btn btn"  *ngIf="editProfile === false" (click)="editMyProfile()">
         Edit profile</button>
 
         <!-- show button if editing the form-->
         <!-- call discardEdit method when clicking on this button-->
-        <button id="editDiscardBtn" class="alert-btn btn">Discard</button>
+        <button id="editDiscardBtn" class="alert-btn btn"  *ngIf="editProfile === true" (click)="discardEdit()">Discard</button>
       </div>
     </div>
   </div>

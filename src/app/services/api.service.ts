@@ -10,6 +10,7 @@ import { Credentials } from '../models/credentials.model';
 import { Users } from '../models/users.model';
 import { Patient } from '../models/patient';
 import { Appointment } from '../models/appointment';
+import { catchError, map } from 'rxjs/operators';
 
 @Injectable()
 export class ApiService {
@@ -25,8 +26,28 @@ export class ApiService {
     // should return response from server
 
     // handle error 
+    const body = {
+      username: username,
+      password: password
+    }; // Create request body
 
-    return;
+
+    // Make an HTTP POST request to your login endpoint
+    return this.http.post(`${this.API_URL}${this.AUTH_API_URL}`, body).pipe(
+      map((response: any) => {
+        return response;
+      }),
+      catchError(() => {
+        // Unauthorized (invalid credentials)
+        return Observable.throw({
+          error: {
+            message: 'Invalid username or password'
+          },
+          status: 401,
+          statusText: 'Invalid username or password'
+        });
+      })
+    );
   }
 
   public getUserDetails(userId: number): Observable<Users> {
@@ -34,7 +55,21 @@ export class ApiService {
 
     // handle error 
 
-    return;
+    return this.http.get(`${this.API_URL}/users/${userId}`).pipe(
+      map((response: any) => {
+        return response;
+      }),
+      catchError((error) => {
+        // Unauthorized (invalid credentials)
+        return Observable.throw({
+          status: error.status,
+          statusText: 'Invalid username or password',
+          error: {
+            message: 'Invalid username or password'
+          }
+        });
+      })
+    );
   }
 
   public updateDetails(userDetails: Users): Observable<Users> {
@@ -42,7 +77,21 @@ export class ApiService {
 
     // handle error 
 
-    return;
+    return this.http.put(`${this.API_URL}/users/${userDetails.userId}`, userDetails).pipe(
+      map((response: any) => {
+        return response;
+      }),
+      catchError((error) => {
+        // Unauthorized (invalid credentials)
+        return Observable.throw({
+          status: error.status,
+          statusText: 'Invalid username or password',
+          error: {
+            message: 'Invalid username or password'
+          }
+        });
+      })
+    );
   }
 
   public registerPatient(patientDetails: any): Observable<any> {
@@ -51,7 +100,21 @@ export class ApiService {
 
     // handle error 
 
-    return;
+    return this.http.post(`${this.API_URL}/allpatients`, patientDetails).pipe(
+      map((response: any) => {
+        return response;
+      }),
+      catchError((error) => {
+        // Unauthorized (invalid credentials)
+        return Observable.throw({
+          status: error.status,
+          statusText: 'Invalid username or password',
+          error: {
+            message: 'Invalid username or password'
+          }
+        });
+      })
+    );
   }
 
   public getAllPatientsList(): Observable<any> {
@@ -60,7 +123,21 @@ export class ApiService {
 
     // handle error 
 
-    return;
+    return this.http.get(`${this.API_URL}/allpatients`).pipe(
+      map((response: any) => {
+        return response;
+      }),
+      catchError((error) => {
+        // Unauthorized (invalid credentials)
+        return Observable.throw({
+          status: error.status,
+          statusText: 'Invalid username or password',
+          error: {
+            message: 'Invalid username or password'
+          }
+        });
+      })
+    );
   }
 
   public getParticularPatient(id): Observable<any> {
@@ -68,6 +145,21 @@ export class ApiService {
     // should return particular patient details from server
 
     // handle error 
+    return this.http.get(`${this.API_URL}/allpatients/${id}`).pipe(
+      map((response: any) => {
+        return response;
+      }),
+      catchError((error) => {
+        // Unauthorized (invalid credentials)
+        return Observable.throw({
+          status: error.status,
+          statusText: 'Invalid username or password',
+          error: {
+            message: 'Invalid username or password'
+          }
+        });
+      })
+    );
 
     return;
   }
@@ -77,8 +169,22 @@ export class ApiService {
     // should return diseases from server
 
     // handle error 
+    return this.http.get(`${this.API_URL}/diseases`).pipe(
+      map((response: any) => {
+        return response;
+      }),
+      catchError((error) => {
+        // Unauthorized (invalid credentials)
+        return Observable.throw({
+          status: error.status,
+          statusText: 'Invalid username or password',
+          error: {
+            message: 'Invalid username or password'
+          }
+        });
+      })
+    );
 
-    return;
   }
 
   public bookAppointment(appointmentDetails: any): Observable<any> {
@@ -87,7 +193,21 @@ export class ApiService {
 
     // handle error 
 
-    return;
+    return this.http.post(`${this.API_URL}/reqappointments`, appointmentDetails).pipe(
+      map((response: any) => {
+        return response;
+      }),
+      catchError((error) => {
+        // Unauthorized (invalid credentials)
+        return Observable.throw({
+          status: error.status,
+          statusText: 'Invalid username or password',
+          error: {
+            message: 'Invalid username or password'
+          }
+        });
+      })
+    );
   }
 
   public requestedAppointments(): Observable<any> {
@@ -96,7 +216,21 @@ export class ApiService {
 
     // handle error 
 
-    return;
+    return this.http.get(`${this.API_URL}/reqappointments`).pipe(
+      map((response: any) => {
+        return response;
+      }),
+      catchError((error) => {
+        // Unauthorized (invalid credentials)
+        return Observable.throw({
+          status: error.status,
+          statusText: 'Invalid username or password',
+          error: {
+            message: 'Invalid username or password'
+          }
+        });
+      })
+    );
   }
 
   public getAppointments(userId): Observable<any> {
@@ -105,7 +239,21 @@ export class ApiService {
 
     // handle error 
 
-    return;
+    return this.http.get(`${this.API_URL}/reqappointments?patientId=${userId}`).pipe(
+      map((response: any) => {
+        return response;
+      }),
+      catchError((error) => {
+        // Unauthorized (invalid credentials)
+        return Observable.throw({
+          status: error.status,
+          statusText: 'Invalid username or password',
+          error: {
+            message: 'Invalid username or password'
+          }
+        });
+      })
+    );
   }
 
   public deleteAppointment(appointmentId): Observable<any> {
@@ -114,7 +262,21 @@ export class ApiService {
 
     // handle error
 
-    return;
+    return this.http.delete(`${this.API_URL}/reqappointments/${appointmentId}`).pipe(
+      map((response: any) => {
+        return response;
+      }),
+      catchError((error) => {
+        // Unauthorized (invalid credentials)
+        return Observable.throw({
+          status: error.status,
+          statusText: 'Invalid username or password',
+          error: {
+            message: 'Invalid username or password'
+          }
+        });
+      })
+    );
   }
 
   private handleError(error: Response | any) {

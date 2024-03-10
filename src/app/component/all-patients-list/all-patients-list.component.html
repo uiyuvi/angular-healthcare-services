@@ -16,7 +16,7 @@
       </thead>
       <tbody>
         <!-- display all patients list -->
-        <tr id="table-row">
+        <tr id="table-row" *ngFor="let item of allPatients">
         	<td id="table-id" >{{item.id}}</td>
           <td id="table-firstname" class="td-column">{{item.firstName}}</td>
           <td id="table-lastname" >{{item.lastName}}</td>
@@ -27,7 +27,7 @@
           <td id="table-registeredOn">{{item.registeredTime| date: 'dd/MM/yyyy hh:mm:ss'}}</td>
           <td class="column-btn">
             <!--call view method with selected id when clicking this button-->
-            <a id="view" class="view-details">View Details</a>
+            <a id="view" class="view-details" (click)="view(item.id)">View Details</a>
           </td>
         </tr>
       </tbody>

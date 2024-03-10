@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Patient } from '../../models/patient';
 import { DataService } from '../../services/data.service';
-import {ActivatedRoute, RouterLinkActive} from '@angular/router';
+import { ActivatedRoute, RouterLinkActive } from '@angular/router';
 
 @Component({
   selector: 'app-all-patients-list',
@@ -18,12 +18,22 @@ export class AllPatientsListComponent implements OnInit {
   ngOnInit() {
 
     // get all patients list from service
+    this.dataService.getAllPatientsList().subscribe(
+      (response) => {
+        // Successful login
+        this.allPatients = response;
+      },
+      (error) => {
+        // Handle login error (display error message, etc.)
+      }
+    );
 
   }
 
   view(patientId) {
 
     // should navigate to 'patientList' page with selected patientId
-    
+    this.route.navigate(['/patientList', patientId])
+
   }
 }

@@ -17,6 +17,7 @@ import * as alertify from 'alertify.js';
 export class ViewPatientComponent implements OnInit {
 
   patient;
+  listOfDiseases;
   names;
   today;
   isBookAppointment: boolean = true;
@@ -44,11 +45,34 @@ export class ViewPatientComponent implements OnInit {
 
     // get selected patient id
     // get Particular Patient from service using patient id and assign response to patient property
-
+    this.activatedRoute.paramMap.switchMap((params: ParamMap) => {
+      return this.dataService.getParticularPatient(params.get('id'))
+    }).subscribe(
+      (response) => {
+        // Successful login
+        this.patient = response;
+      },
+      (error) => {
+        // Handle login error (display error message, etc.)
+      }
+    );
   }
 
   bookAppointment() {
     // get diseases list from service
+    this.isBookAppointment = false;
+    this.isScheduledAppointment = true;
+    this.isFormEnabled = true;
+    this.isTableEnabled = false;
+    this.dataService.getDiseasesList().subscribe(
+      (response) => {
+        // Successful login
+        this.listOfDiseases = response;
+      },
+      (error) => {
+        // Handle login error (display error message, etc.)
+      }
+    );
 
     // change isBookAppointment, isScheduledAppointment, isFormEnabled, isTableEnabled property values appropriately
   }
@@ -59,6 +83,25 @@ export class ViewPatientComponent implements OnInit {
     // patientId, patientFirstName, patientLastName, disease, priority, tentativedate, registeredTime
 
     // if booked successfully should redirect to 'requested_appointments' page
+    const appointmentDetailsForAPI = {
+      patientId: this.patient.id,
+      fname: this.patient.fname,
+      lname: this.patient.lname,
+      disease: this.appointmentForm.controls.selectDisease.value,
+      priority: this.appointmentForm.controls.priority.value,
+      AppointmentDate: this.appointmentForm.controls.tentativeDate.value,
+      bookingTime: this.today
+    }
+    this.dataService.bookAppointment(appointmentDetailsForAPI).subscribe(
+      (response) => {
+        // Successful login
+        console.log(response)
+        this.route.navigate(['/requested_appointments'])
+      },
+      (error) => {
+        // Handle login error (display error message, etc.)
+      }
+    );
     
   }
 
@@ -67,13 +110,34 @@ export class ViewPatientComponent implements OnInit {
     // change isBookAppointment, isScheduledAppointment, isFormEnabled, isTableEnabled property values appropriately
 
     // get particular patient appointments using getAppointments method of DataService 
+    this.isBookAppointment = true;
+    this.isScheduledAppointment = false;
+    this.isFormEnabled = false;
+    this.isTableEnabled = true;
+    this.dataService.getAppointments(this.patient.id).subscribe(
+      (response) => {
+        // Successful login
+        this.ScheduledAppointmentResponse = response;
+      },
+      (error) => {
+        // Handle login error (display error message, etc.)
+      }
+    );
 
   }
 
   cancelAppointment(id) {
 
     // delete selected appointment uing service
-
+    this.dataService.deleteAppointment(id).subscribe(
+      (response) => {
+        // Successful login
+        this.scheduleAppointment()
+      },
+      (error) => {
+        // Handle login error (display error message, etc.)
+      }
+    );
     // After deleting the appointment, get particular patient appointments
 
   }

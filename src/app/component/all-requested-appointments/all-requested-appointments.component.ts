@@ -10,24 +10,36 @@ import * as alertify from 'alertify.js';
 })
 export class AllRequestedAppointmentsComponent implements OnInit {
 
-	allAppointments;
+  allAppointments;
 
-  constructor(private dataService: DataService, private route: Router) { 
+  constructor(private dataService: DataService, private route: Router) {
   }
 
   ngOnInit() {
     // call appointments method by default
+    this.appointments();
   }
 
   appointments() {
-
     // get all requested appointments from service
+    this.dataService.requestedAppointments().subscribe(
+      (response) => {
+        // Successful login
+        this.allAppointments = response;
+      },
+      (error) => {
+        // Handle login error (display error message, etc.)
+      }
+    );
+
+    console.log(this.allAppointments)
 
   }
 
   view(patientId) {
 
     // should navigate to 'patientList' page with selected patientId
+    this.route.navigate(['/patientList', patientId])
 
   }
 
@@ -36,7 +48,15 @@ export class AllRequestedAppointmentsComponent implements OnInit {
     // delete selected appointment uing service
 
     // After deleting the appointment, get all requested appointments
-
+    this.dataService.deleteAppointment(id).subscribe(
+      (response) => {
+        // Successful login
+        this.appointments()
+      },
+      (error) => {
+        // Handle login error (display error message, etc.)
+      }
+    );
 
   }
 

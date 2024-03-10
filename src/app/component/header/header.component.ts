@@ -21,15 +21,23 @@ export class HeaderComponent implements OnInit {
   ngOnInit() {
 
     // get userId from service and assign it to userId property
-
+    this.userId = this.dataService.getUserId()
     // call getProfileDetails method to get user details
-
+    this.getProfileDetails();
   }
 
   getProfileDetails() {
 
   // call getUserDetails method of dataService and assign response to userDetails property
-    
+  this.dataService.getUserDetails(this.userId).subscribe(
+    (response) => {
+      // Successful login
+      this.userDetails = response;
+    },
+    (error) => {
+      // Handle login error (display error message, etc.)
+    }
+  );
   }
 
 
